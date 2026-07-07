@@ -1,0 +1,13 @@
+# Raw downloaded datasets — large, reproducible via 00-data/download-datasets.sh
+00-data/**/*.csv
+00-data/**/*.xlsx
+00-data/**/*.zip
+00-data/**/*.pdf
+00-data/**/*.json
+!00-data/**/.gitkeep
+
+# Azure Functions local dev
+functions/**/local.settings.json
+functions/**/.python_packages/
+functions/**/__pycache__/
+functions/**/*.pyc

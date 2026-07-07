@@ -1,0 +1,26 @@
+{
+  "_note": "Placeholder values for prototyping only. Needs dietitian/clinical sign-off before use with real members, especially chronic_diabetes.",
+  "tolerance_pct": 10,
+  "personas": {
+    "general": {
+      "energy_kcal": 2000, "protein_g": 50, "carbohydrate_g": 260,
+      "sugars_g": 30, "fibre_g": 30, "fat_g": 70, "saturates_g": 20, "salt_g": 6
+    },
+    "chronic_diabetes": {
+      "energy_kcal": 1900, "protein_g": 60, "carbohydrate_g": 150,
+      "sugars_g": 20, "fibre_g": 30, "fat_g": 65, "saturates_g": 15, "salt_g": 6
+    },
+    "fitness": {
+      "energy_kcal": 2400, "protein_g": 100, "carbohydrate_g": 280,
+      "sugars_g": 30, "fibre_g": 30, "fat_g": 75, "saturates_g": 20, "salt_g": 6
+    },
+    "children": {
+      "energy_kcal": 1600, "protein_g": 28, "carbohydrate_g": 200,
+      "sugars_g": 19, "fibre_g": 20, "fat_g": 55, "saturates_g": 17, "salt_g": 3
+    },
+    "elderly": {
+      "energy_kcal": 1800, "protein_g": 55, "carbohydrate_g": 230,
+      "sugars_g": 25, "fibre_g": 30, "fat_g": 60, "saturates_g": 18, "salt_g": 6
+    }
+  }
+}
