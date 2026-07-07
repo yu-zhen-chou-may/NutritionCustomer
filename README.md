@@ -77,26 +77,3 @@ Partly true, with a caveat. You can query external data on-demand (e.g. Synapse 
 ```
 
 Note on `/00-data`: some of these datasets are large (Tesco Grocery 1.0 especially). Best practice is to keep the raw files out of git entirely (add `/00-data/**/*.csv` etc. to `.gitignore`) and only commit small download/setup scripts — otherwise the repo gets slow and GitHub has file-size limits.
-
-## Next steps
-
-1. ~~Confirm Co-op Membership data access/format~~ — not available yet; proceed on open datasets only for now.
-2. Prototype the Nutrition Gap Service against Tesco Grocery 1.0 + Open Food Facts (download from the Figshare collection linked above, not the paper).
-3. Stand up Azure resource group + CI/CD (GitHub Actions → Azure) — see walkthrough below.
-4. Revisit membership integration once Co-op grants data access.
-
-### Azure resource group + GitHub Actions, step by step
-
-1. Sign in to **portal.azure.com** with the co-op's Azure account.
-2. Search **"Resource groups"** → **+ Create** → name it e.g. `rg-coop-nutrition`, region e.g. UK South → **Review + create**. This is the folder holding every resource for this project.
-3. Search **"Static Web Apps"** → **+ Create**:
-   - Resource group: the one above.
-   - Name: e.g. `coop-nutrition-web`.
-   - Plan: **Free** (fine for prototyping).
-   - Deployment source: **GitHub** → sign in and authorise Azure → pick org/repo/branch.
-   - Build preset: match your framework (or "Custom" for plain HTML).
-   - **Review + create**.
-4. Azure automatically commits a `.github/workflows/azure-static-web-apps-<name>.yml` file to your repo and adds the deployment token as a GitHub secret — no manual setup needed.
-5. Check the **Actions** tab on GitHub — a workflow run starts immediately. Once green, the site is live at the URL on the Static Web App's Overview page.
-6. Every push to that branch now auto-deploys.
-7. Later, add an **Azure Function App** in the same resource group for the actual microservices, wired up the same way.
