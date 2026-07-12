@@ -1,18 +1,6 @@
-"""
-Nutrition Gap Service — Azure Function (Python v4 programming model).
-
-Input: weekly nutrient totals for a member (already aggregated upstream from
-purchase history + barcode scans + meal-photo recognition — see
-docs/nutrition-gap-logic.md for how those feed in).
-
-Output: per-nutrient gap vs. the member's persona target, consumed by the
-Shopping List Generator and the weekly summary notification.
-"""
-
 import json
 import logging
 import pathlib
-
 import azure.functions as func
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
@@ -23,17 +11,19 @@ with open(TARGETS_PATH) as f:
 
 TOLERANCE_PCT = _CONFIG["tolerance_pct"]
 PERSONA_TARGETS = _CONFIG["personas"]
+DAYS_IN_WINDOW = 7
 
 
-def compute_gaps(persona: str, consumption: dict) -> list[dict]:
+def compute_gaps(persona: str, weekly_consumption: dict) -> list[dict]:
     if persona not in PERSONA_TARGETS:
         raise ValueError(f"Unknown persona '{persona}'. Valid: {list(PERSONA_TARGETS)}")
 
     targets = PERSONA_TARGETS[persona]
     gaps = []
-    for nutrient, target in targets.items():
-        actual = consumption.get(nutrient, 0)
-        delta_pct = ((actual - target) / target) * 100 if target else 0
+    for nutrient, daily_target in targets.items():
+        weekly_actual = weekly_consumption.get(nutrient, 0)
+        daily_avg = weekly_actual / DAYS_IN_WINDOW
+        delta_pct = ((daily_avg - daily_target) / daily_target) * 100 if daily_target else 0
 
         if delta_pct < -TOLERANCE_PCT:
             status = "under"
@@ -44,8 +34,9 @@ def compute_gaps(persona: str, consumption: dict) -> list[dict]:
 
         gaps.append({
             "nutrient": nutrient,
-            "actual": actual,
-            "target": target,
+            "weekly_actual": round(weekly_actual, 1),
+            "daily_avg": round(daily_avg, 1),
+            "daily_target": daily_target,
             "status": status,
             "delta_pct": round(delta_pct, 1),
         })
